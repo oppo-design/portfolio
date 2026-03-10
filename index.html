@@ -251,7 +251,7 @@
       .featured-grid { grid-template-columns: 1fr; gap: 0.8rem; margin-top: 2rem; }
       .featured-main { grid-column: 1; grid-row: auto; min-height: 300px; }
       .featured-side { grid-column: 1; min-height: 200px; }
-      .gallery-grid { columns: 2 !important; column-gap: 0.4rem; }
+      
       .gallery-item { margin-bottom: 0.4rem; }
       .filter-bar { gap: 0.4rem; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 0.5rem; scrollbar-width: none; }
       .filter-bar::-webkit-scrollbar { display: none; }
@@ -434,32 +434,30 @@
       letter-spacing: 0.05em;
       line-height: 1;
     }
-    /* Masonry-style grid */
+    /* ── EDITORIAL GRID ── */
     .gallery-grid {
-      columns: 6;
-      column-gap: 0.5rem;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-auto-rows: 160px;
+      gap: 6px;
     }
-    @media (max-width: 1400px) {
-      .gallery-grid { columns: 5; }
-    }
-    @media (max-width: 1100px) {
-      .gallery-grid { columns: 4; }
-    }
-    @media (max-width: 800px) {
-      .gallery-grid { columns: 3; }
-    }
-    @media (max-width: 560px) {
-      .gallery-grid { columns: 2; }
-    }
+
+    /* tamanhos editoriais — ciclo de 7 itens */
+    .gallery-item.ed-1 { grid-column: span 5; grid-row: span 3; }
+    .gallery-item.ed-2 { grid-column: span 3; grid-row: span 2; }
+    .gallery-item.ed-3 { grid-column: span 4; grid-row: span 2; }
+    .gallery-item.ed-4 { grid-column: span 3; grid-row: span 2; }
+    .gallery-item.ed-5 { grid-column: span 4; grid-row: span 3; }
+    .gallery-item.ed-6 { grid-column: span 5; grid-row: span 2; }
+    .gallery-item.ed-7 { grid-column: span 3; grid-row: span 3; }
+
     .gallery-item {
-      break-inside: avoid;
-      margin-bottom: 0.5rem;
       position: relative;
       overflow: hidden;
       background: var(--grey-mid);
       cursor: pointer;
     }
-    .gallery-item::before {
+    .gallery-item::after {
       content: '';
       position: absolute;
       inset: 0;
@@ -468,27 +466,27 @@
       z-index: 2;
       pointer-events: none;
     }
-    .gallery-item:hover::before {
+    .gallery-item:hover::after {
       border-color: var(--yellow);
     }
     .gallery-item img {
       width: 100%;
+      height: 100%;
+      object-fit: cover;
       display: block;
-      transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.4s;
-      filter: grayscale(20%) brightness(0.9);
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.4s;
+      filter: grayscale(15%) brightness(0.85);
     }
     .gallery-item:hover img {
-      transform: scale(1.04);
+      transform: scale(1.06);
       filter: grayscale(0%) brightness(1);
     }
     .gallery-item-overlay {
       position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 1.5rem 1rem 1rem;
-      background: linear-gradient(to top, rgba(8,8,8,0.9) 0%, transparent 100%);
-      transform: translateY(100%);
+      bottom: 0; left: 0; right: 0;
+      padding: 2rem 1.2rem 1.2rem;
+      background: linear-gradient(to top, rgba(8,8,8,0.92) 0%, transparent 100%);
+      transform: translateY(105%);
       transition: transform 0.35s ease;
       z-index: 3;
     }
@@ -496,10 +494,80 @@
       transform: translateY(0);
     }
     .gallery-item-overlay span {
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--yellow);
+    }
+
+    /* índice editorial no canto */
+    .gallery-item-index {
+      position: absolute;
+      top: 0.8rem;
+      left: 0.8rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.25);
+      z-index: 3;
+      pointer-events: none;
+      transition: color 0.3s;
+    }
+    .gallery-item:hover .gallery-item-index {
+      color: var(--yellow);
+    }
+
+    /* categoria tag */
+    .gallery-item-cat {
+      position: absolute;
+      top: 0.8rem;
+      right: 0.8rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.45rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+      z-index: 3;
+      pointer-events: none;
+      transition: color 0.3s;
+    }
+    .gallery-item:hover .gallery-item-cat {
+      color: rgba(255,224,0,0.7);
+    }
+
+    /* hidden para filtros */
+    .gallery-item.hidden {
+      display: none;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+      .gallery-grid {
+        grid-template-columns: repeat(8, 1fr);
+        grid-auto-rows: 140px;
+      }
+      .gallery-item.ed-1 { grid-column: span 4; grid-row: span 3; }
+      .gallery-item.ed-2 { grid-column: span 4; grid-row: span 2; }
+      .gallery-item.ed-3 { grid-column: span 4; grid-row: span 2; }
+      .gallery-item.ed-4 { grid-column: span 4; grid-row: span 2; }
+      .gallery-item.ed-5 { grid-column: span 4; grid-row: span 3; }
+      .gallery-item.ed-6 { grid-column: span 4; grid-row: span 2; }
+      .gallery-item.ed-7 { grid-column: span 4; grid-row: span 2; }
+    }
+    @media (max-width: 700px) {
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 180px;
+      }
+      .gallery-item.ed-1,
+      .gallery-item.ed-2,
+      .gallery-item.ed-3,
+      .gallery-item.ed-4,
+      .gallery-item.ed-5,
+      .gallery-item.ed-6,
+      .gallery-item.ed-7 { grid-column: span 1; grid-row: span 1; }
+      .gallery-item.ed-1,
+      .gallery-item.ed-5 { grid-column: span 2; }
     }
     /* Placeholder items (for images user will add) */
     .gallery-placeholder {
@@ -787,172 +855,115 @@
       <button class="filter-btn" data-filter="chaves">Chaves</button>
     </div>
     <div class="gallery-grid reveal-stagger" id="gallery-grid">
-      <!-- ITEM 1 — Brow (Anthony Davis) -->
-      <div class="gallery-item artwork-card"
-           data-title="Brow Series"
-           data-category="music"
-           data-extras=""
-           onclick="openPanel(this)">
+
+      <div class="gallery-item artwork-card" data-title="Brow Series" data-category="music" data-extras="" onclick="openPanel(this)">
+        <span class="gallery-item-index">01</span><span class="gallery-item-cat">Music</span>
         <img src="brow.jpg" alt="Brow Series" />
         <div class="gallery-item-overlay"><span>Brow Series — Ver mais →</span></div>
       </div>
-      <!-- ITEM 2 — Gang / Hip-hop -->
-      <div class="gallery-item artwork-card"
-           data-title="Gang Series"
-           data-category="music"
-           data-extras=""
-           onclick="openPanel(this)">
+
+      <div class="gallery-item artwork-card" data-title="Gang Series" data-category="music" data-extras="" onclick="openPanel(this)">
+        <span class="gallery-item-index">02</span><span class="gallery-item-cat">Music</span>
         <img src="gang.jpg" alt="Gang Series" />
         <div class="gallery-item-overlay"><span>Gang Series — Ver mais →</span></div>
       </div>
-      <!-- ITEM 3 — Ozzy -->
-      <div class="gallery-item artwork-card"
-           data-title="Ozzy Series"
-           data-category="music"
-           data-extras=""
-           onclick="openPanel(this)">
+
+      <div class="gallery-item artwork-card" data-title="Ozzy Series" data-category="music" data-extras="" onclick="openPanel(this)">
+        <span class="gallery-item-index">03</span><span class="gallery-item-cat">Music</span>
         <img src="ozzy.jpg" alt="Ozzy Series" />
         <div class="gallery-item-overlay"><span>Ozzy Series — Ver mais →</span></div>
       </div>
-      <!-- ITEM 4 — OVEN Azul -->
-      <div class="gallery-item artwork-card"
-           data-title="OVEN Blue"
-           data-category="oven"
-           data-extras=""
-           onclick="openPanel(this)">
+
+      <div class="gallery-item artwork-card" data-title="OVEN Blue" data-category="oven" data-extras="" onclick="openPanel(this)">
+        <span class="gallery-item-index">04</span><span class="gallery-item-cat">OVEN</span>
         <img src="Skateboard-Mockup-01.jpg" alt="OVEN Blue" />
         <div class="gallery-item-overlay"><span>OVEN Blue — Ver mais →</span></div>
       </div>
-      <!-- ITEM 5 — OVEN Colorido -->
-      <div class="gallery-item artwork-card"
-           data-title="OVEN Color"
-           data-category="oven"
-           data-extras=""
-           onclick="openPanel(this)">
+
+      <div class="gallery-item artwork-card" data-title="OVEN Color" data-category="oven" data-extras="" onclick="openPanel(this)">
+        <span class="gallery-item-index">05</span><span class="gallery-item-cat">OVEN</span>
         <img src="Skateboard-Mockup-02.jpg" alt="OVEN Color" />
         <div class="gallery-item-overlay"><span>OVEN Color — Ver mais →</span></div>
       </div>
-      <!-- ITEM 6 — OVEN Holográfico -->
-      <div class="gallery-item artwork-card"
-           data-title="OVEN Holo"
-           data-category="oven"
-           data-extras=""
-           onclick="openPanel(this)">
+
+      <div class="gallery-item artwork-card" data-title="OVEN Holo" data-category="oven" data-extras="" onclick="openPanel(this)">
+        <span class="gallery-item-index">06</span><span class="gallery-item-cat">OVEN</span>
         <img src="Skateboard-Mockup-03.jpg" alt="OVEN Holo" />
         <div class="gallery-item-overlay"><span>OVEN Holo — Ver mais →</span></div>
       </div>
-      <!-- ITEM 7 — Bob Marley (One Love) -->
-      <div class="gallery-item artwork-card"
-           data-title="One Love — Bob Marley"
-           data-category="music"
-           data-extras="Skateboard-Mockup---bob.jpg"
-           onclick="openPanel(this)">
+
+      <div class="gallery-item artwork-card" data-title="One Love — Bob Marley" data-category="music" data-extras="Skateboard-Mockup---bob.jpg" onclick="openPanel(this)">
+        <span class="gallery-item-index">07</span><span class="gallery-item-cat">Music</span>
         <img src="Skateboard-Mockup-Bob.jpg" alt="Bob Marley Series" />
         <div class="gallery-item-overlay"><span>One Love — Ver mais →</span></div>
       </div>
-      <!-- Adicione mais itens aqui copiando o bloco acima ↑ -->
 
-      <!-- NBA — Iverson Series -->
-      <div class="gallery-item artwork-card"
-           data-title="Iverson Series"
-           data-category="nba"
-           data-extras="Skateboard-Mockup---iver-02.jpg,Skateboard-Mockup---iver-03.jpg"
-           onclick="openPanel(this)">
+      <div class="gallery-item artwork-card" data-title="Iverson Series" data-category="nba" data-extras="Skateboard-Mockup---iver-02.jpg,Skateboard-Mockup---iver-03.jpg" onclick="openPanel(this)">
+        <span class="gallery-item-index">08</span><span class="gallery-item-cat">NBA</span>
         <img src="Skateboard-Mockup---iver-01.jpg" alt="Iverson Series" />
         <div class="gallery-item-overlay"><span>Iverson Series — Ver mais →</span></div>
       </div>
 
-      <!-- NBA — Jordan Series -->
-      <div class="gallery-item artwork-card"
-           data-title="Jordan Series"
-           data-category="nba"
-           data-extras="Skateboard-Mockup---bulls-01.jpg,Skateboard-Mockup---bulls-02.jpg"
-           onclick="openPanel(this)">
+      <div class="gallery-item artwork-card" data-title="Jordan Series" data-category="nba" data-extras="Skateboard-Mockup---bulls-01.jpg,Skateboard-Mockup---bulls-02.jpg" onclick="openPanel(this)">
+        <span class="gallery-item-index">09</span><span class="gallery-item-cat">NBA</span>
         <img src="Skateboard-Mockup---bulls.jpg" alt="Jordan Series" />
         <div class="gallery-item-overlay"><span>Jordan Series — Ver mais →</span></div>
       </div>
 
-      <!-- NBA — James Series -->
-      <div class="gallery-item artwork-card"
-           data-title="James Series"
-           data-category="nba"
-           data-extras="Skateboard-Mockup---heat-01.jpg,Skateboard-Mockup---heat-03.jpg"
-           onclick="openPanel(this)">
+      <div class="gallery-item artwork-card" data-title="James Series" data-category="nba" data-extras="Skateboard-Mockup---heat-01.jpg,Skateboard-Mockup---heat-03.jpg" onclick="openPanel(this)">
+        <span class="gallery-item-index">10</span><span class="gallery-item-cat">NBA</span>
         <img src="Skateboard-Mockup---heat.jpg" alt="James Series" />
         <div class="gallery-item-overlay"><span>James Series — Ver mais →</span></div>
       </div>
-      <!-- CARTOON 01 — Fornalha Green -->
-      <div class="gallery-item artwork-card"
-           data-title="Cartoon Green"
-           data-category="cartoon"
-           data-extras=""
-           onclick="openPanel(this)">
+
+      <div class="gallery-item artwork-card" data-title="Cartoon Green" data-category="cartoon" data-extras="" onclick="openPanel(this)">
+        <span class="gallery-item-index">11</span><span class="gallery-item-cat">Cartoon</span>
         <img src="cartoon-01.jpg" alt="Cartoon Green" />
         <div class="gallery-item-overlay"><span>Cartoon Green — Ver mais →</span></div>
       </div>
-      <!-- CARTOON 02 — Fornalha Blue -->
-      <div class="gallery-item artwork-card"
-           data-title="Cartoon Blue"
-           data-category="cartoon"
-           data-extras=""
-           onclick="openPanel(this)">
+
+      <div class="gallery-item artwork-card" data-title="Cartoon Blue" data-category="cartoon" data-extras="" onclick="openPanel(this)">
+        <span class="gallery-item-index">12</span><span class="gallery-item-cat">Cartoon</span>
         <img src="cartoon-02.jpg" alt="Cartoon Blue" />
         <div class="gallery-item-overlay"><span>Cartoon Blue — Ver mais →</span></div>
       </div>
-      <!-- CARTOON 03 — Fornalha Purple -->
-      <div class="gallery-item artwork-card"
-           data-title="Cartoon Purple"
-           data-category="cartoon"
-           data-extras=""
-           onclick="openPanel(this)">
+
+      <div class="gallery-item artwork-card" data-title="Cartoon Purple" data-category="cartoon" data-extras="" onclick="openPanel(this)">
+        <span class="gallery-item-index">13</span><span class="gallery-item-cat">Cartoon</span>
         <img src="cartoon-03.jpg" alt="Cartoon Purple" />
         <div class="gallery-item-overlay"><span>Cartoon Purple — Ver mais →</span></div>
       </div>
-      <!-- CARTOON 04 — Fornalha Yellow -->
-      <div class="gallery-item artwork-card"
-           data-title="Cartoon Yellow"
-           data-category="cartoon"
-           data-extras=""
-           onclick="openPanel(this)">
+
+      <div class="gallery-item artwork-card" data-title="Cartoon Yellow" data-category="cartoon" data-extras="" onclick="openPanel(this)">
+        <span class="gallery-item-index">14</span><span class="gallery-item-cat">Cartoon</span>
         <img src="cartoon-04.jpg" alt="Cartoon Yellow" />
         <div class="gallery-item-overlay"><span>Cartoon Yellow — Ver mais →</span></div>
       </div>
-      <!-- CHAVES 01 — Chaves -->
-      <div class="gallery-item artwork-card"
-           data-title="Chaves — Nu Decks"
-           data-category="chaves"
-           data-extras=""
-           onclick="openPanel(this)">
+
+      <div class="gallery-item artwork-card" data-title="Chaves — Nu Decks" data-category="chaves" data-extras="" onclick="openPanel(this)">
+        <span class="gallery-item-index">15</span><span class="gallery-item-cat">Chaves</span>
         <img src="chaves-01.jpg" alt="Chaves Nu Decks" />
         <div class="gallery-item-overlay"><span>Chaves Nu Decks — Ver mais →</span></div>
       </div>
-      <!-- CHAVES 02 — Barriga -->
-      <div class="gallery-item artwork-card"
-           data-title="Barriga — Nu Decks"
-           data-category="chaves"
-           data-extras=""
-           onclick="openPanel(this)">
+
+      <div class="gallery-item artwork-card" data-title="Barriga — Nu Decks" data-category="chaves" data-extras="" onclick="openPanel(this)">
+        <span class="gallery-item-index">16</span><span class="gallery-item-cat">Chaves</span>
         <img src="chaves-02.jpg" alt="Barriga Nu Decks" />
         <div class="gallery-item-overlay"><span>Barriga Nu Decks — Ver mais →</span></div>
       </div>
-      <!-- CHAVES 03 — Chavinho -->
-      <div class="gallery-item artwork-card"
-           data-title="Chavinho — Fornalha"
-           data-category="chaves"
-           data-extras=""
-           onclick="openPanel(this)">
+
+      <div class="gallery-item artwork-card" data-title="Chavinho — Fornalha" data-category="chaves" data-extras="" onclick="openPanel(this)">
+        <span class="gallery-item-index">17</span><span class="gallery-item-cat">Chaves</span>
         <img src="chaves-03.jpg" alt="Chavinho Fornalha" />
         <div class="gallery-item-overlay"><span>Chavinho — Ver mais →</span></div>
       </div>
-      <!-- CHAVES 04 — Seu Madruga -->
-      <div class="gallery-item artwork-card"
-           data-title="Seu Madruga — Fornalha"
-           data-category="chaves"
-           data-extras=""
-           onclick="openPanel(this)">
+
+      <div class="gallery-item artwork-card" data-title="Seu Madruga — Fornalha" data-category="chaves" data-extras="" onclick="openPanel(this)">
+        <span class="gallery-item-index">18</span><span class="gallery-item-cat">Chaves</span>
         <img src="chaves-04.jpg" alt="Seu Madruga Fornalha" />
         <div class="gallery-item-overlay"><span>Seu Madruga — Ver mais →</span></div>
       </div>
+
     </div>
   </section>
   <!-- STATS -->
@@ -1234,7 +1245,7 @@
     #side-panel {
       position: fixed;
       inset: 0;
-      z-index: 500;
+      z-index: 400;
       pointer-events: none;
     }
     #side-panel.open {
@@ -1264,6 +1275,7 @@
       display: flex;
       flex-direction: column;
       overflow-y: auto;
+      padding-top: 5rem;
     }
     #side-panel.open #panel-drawer {
       transform: translateX(0);
@@ -1478,16 +1490,35 @@
         btn.classList.add('active');
         const filter = btn.dataset.filter;
         const items = document.querySelectorAll('#gallery-grid .gallery-item');
+
+        // remove editorial size classes
+        const sizeClasses = ['ed-1','ed-2','ed-3','ed-4','ed-5','ed-6','ed-7'];
+
+        let visibleIndex = 0;
         items.forEach(item => {
+          sizeClasses.forEach(c => item.classList.remove(c));
           if (filter === 'all' || item.dataset.category === filter) {
             item.classList.remove('hidden');
+            item.style.animation = 'none';
+            item.offsetHeight; // reflow
             item.style.animation = 'fadeUp 0.4s ease both';
+            // assign editorial size class by position
+            const sizeClass = 'ed-' + ((visibleIndex % 7) + 1);
+            item.classList.add(sizeClass);
+            visibleIndex++;
           } else {
             item.classList.add('hidden');
           }
         });
       });
     });
+    // init editorial sizes on load
+    (function() {
+      const items = document.querySelectorAll('#gallery-grid .gallery-item');
+      items.forEach((item, i) => {
+        item.classList.add('ed-' + ((i % 7) + 1));
+      });
+    })();
     // ══════════════════════════════════════
     // STATS COUNTER
     // ══════════════════════════════════════
