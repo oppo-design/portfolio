@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Oppo Design — Investimento</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --yellow: #FFE000;
+      --yellow-dim: #b8a200;
+      --black: #080808;
+      --grey-dark: #111111;
+      --grey-mid: #1c1c1c;
+      --grey-light: #2e2e2e;
+      --white: #f0f0f0;
+      --noise-opacity: 0.04;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--black);
+      color: var(--white);
+      font-family: 'Space Mono', monospace;
+      overflow-x: hidden;
+      cursor: crosshair;
+      min-height: 100vh;
+    }
+
+    /* Noise overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      opacity: var(--noise-opacity);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Custom cursor */
+    #custom-cursor {
+      position: fixed;
+      width: 28px;
+      height: 28px;
+      border: 1.5px solid var(--yellow);
+      border-radius: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, opacity 0.2s;
+      opacity: 0;
+    }
+    #custom-cursor.visible { opacity: 1; }
+    #custom-cursor.clicking {
+      width: 18px;
+      height: 18px;
+      background: rgba(255,224,0,0.15);
+    }
+    #custom-cursor::before {
+      content: '';
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: var(--yellow);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* ── HEADER / LOGO BAR ── */
+    .top-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 500;
+      padding: 1.5rem 8vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, rgba(8,8,8,0.97), transparent);
+      backdrop-filter: blur(4px);
+    }
+
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.15em;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .logo span { color: var(--yellow); }
+
+    .top-tag {
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #444;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 14rem 8vw 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 70% 40%, rgba(255,224,0,0.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero-bg-text {
+      position: absolute;
+      right: -2vw;
+      top: 50%;
+      transform: translateY(-50%) rotate(90deg);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(8rem, 18vw, 22rem);
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,224,0,0.05);
+      letter-spacing: 0.05em;
+      user-select: none;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--black);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.8rem;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 10vw, 9rem);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      color: var(--white);
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+
+    .hero h1 span { color: var(--yellow); display: block; }
+
+    .hero-sub {
+      margin-top: 1.8rem;
+      font-size: 0.75rem;
+      color: #555;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      max-width: 420px;
+      line-height: 1.8;
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 0 8vw;
+      margin: 0.5rem 0 4rem;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--grey-light);
+    }
+    .divider span {
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--yellow);
+    }
+
+    /* ── PRICING SECTION ── */
+    .pricing-section {
+      padding: 0 8vw 8rem;
+      position: relative;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--grey-light);
+      border: 1px solid var(--grey-light);
+      position: relative;
+    }
+
+    /* Highlight do card do meio */
+    .pricing-grid::before {
+      content: '';
+      position: absolute;
+      top: -1px; bottom: -1px;
+      left: calc(33.333% - 1px);
+      width: calc(33.333% + 2px);
+      border: 1px solid rgba(255,224,0,0.18);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .plan-card {
+      background: var(--black);
+      padding: 3.5rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+      transition: background 0.3s;
+    }
+
+    .plan-card:hover {
+      background: #0d0d0d;
+    }
+
+    .plan-card.featured {
+      background: var(--grey-dark);
+    }
+
+    .plan-card.featured:hover {
+      background: #141414;
+    }
+
+    /* Badge "popular" */
+    .plan-badge {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      background: var(--yellow);
+      color: var(--black);
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      padding: 0.28rem 1rem;
+      white-space: nowrap;
+      z-index: 3;
+    }
+
+    .plan-index {
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      color: var(--yellow);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .plan-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      letter-spacing: 0.06em;
+      line-height: 1;
+      color: var(--white);
+      margin-bottom: 0.6rem;
+    }
+
+    .plan-tagline {
+      font-size: 0.62rem;
+      color: #555;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 2.5rem;
+      line-height: 1.7;
+    }
+
+    /* Linha separadora */
+    .plan-sep {
+      width: 100%;
+      height: 1px;
+      background: var(--grey-light);
+      margin-bottom: 2.5rem;
+    }
+
+    .plan-price-block {
+      margin-bottom: 2.8rem;
+    }
+
+    .plan-price-label {
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      color: #444;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .plan-price {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 5vw, 4.5rem);
+      letter-spacing: 0.02em;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    .plan-card.featured .plan-price {
+      color: var(--yellow);
+    }
+
+    .plan-price sup {
+      font-family: 'Space Mono', monospace;
+      font-size: 1rem;
+      font-weight: 700;
+      vertical-align: super;
+      letter-spacing: 0;
+      color: inherit;
+    }
+
+    /* Lista de entregáveis */
+    .plan-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 3rem;
+      flex: 1;
+    }
+
+    .plan-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: #888;
+      line-height: 1.6;
+    }
+
+    .plan-features li::before {
+      content: '';
+      display: block;
+      flex-shrink: 0;
+      width: 16px;
+      height: 1px;
+      background: var(--yellow);
+      margin-top: 0.55em;
+      opacity: 0.6;
+    }
+
+    .plan-card.featured .plan-features li {
+      color: #aaa;
+    }
+
+    .plan-card.featured .plan-features li::before {
+      opacity: 1;
+    }
+
+    /* Botão WhatsApp */
+    .btn-whatsapp {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+      padding: 1rem 1.5rem;
+      background: transparent;
+      border: 1px solid var(--grey-light);
+      color: var(--white);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-whatsapp::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--yellow);
+      transform: translateX(-101%);
+      transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      z-index: 0;
+    }
+
+    .btn-whatsapp:hover::after {
+      transform: translateX(0);
+    }
+
+    .btn-whatsapp:hover {
+      color: var(--black);
+      border-color: var(--yellow);
+    }
+
+    .btn-whatsapp span,
+    .btn-whatsapp svg {
+      position: relative;
+      z-index: 1;
+    }
+
+    .plan-card.featured .btn-whatsapp {
+      border-color: rgba(255,224,0,0.4);
+    }
+
+    /* ── PAYMENT INFO ── */
+    .payment-strip {
+      padding: 3rem 8vw;
+      border-top: 1px solid var(--grey-light);
+      display: flex;
+      align-items: center;
+      gap: 4rem;
+      flex-wrap: wrap;
+    }
+
+    .payment-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .payment-item-label {
+      font-size: 0.55rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #444;
+    }
+
+    .payment-item-value {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.08em;
+      color: var(--white);
+    }
+
+    .payment-sep {
+      width: 1px;
+      height: 40px;
+      background: var(--grey-light);
+      flex-shrink: 0;
+    }
+
+    .payment-note {
+      font-size: 0.62rem;
+      color: #444;
+      letter-spacing: 0.1em;
+      line-height: 1.8;
+      max-width: 320px;
+      margin-left: auto;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem 8vw;
+      border-top: 1px solid var(--grey-light);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: #333;
+      text-transform: uppercase;
+    }
+
+    footer a {
+      color: var(--yellow);
+      text-decoration: none;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 900px) {
+      .pricing-grid {
+        grid-template-columns: 1fr;
+        gap: 1px;
+      }
+      .pricing-grid::before { display: none; }
+      .plan-card { padding: 3rem 2rem; }
+      .payment-strip { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+      .payment-sep { display: none; }
+      .payment-note { margin-left: 0; }
+    }
+
+    @media (max-width: 768px) {
+      .hero { padding: 11rem 5vw 4rem; }
+      .pricing-section { padding: 0 5vw 6rem; }
+      .payment-strip { padding: 2.5rem 5vw; }
+      footer { flex-direction: column; align-items: flex-start; gap: 0.8rem; padding: 1.8rem 5vw; }
+      .top-bar { padding: 1.2rem 5vw; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom cursor -->
+  <div id="custom-cursor"></div>
+
+  <!-- Top bar -->
+  <header class="top-bar">
+    <a href="#" class="logo">OPPO<span>.</span></a>
+    <span class="top-tag">Tabela de Investimento</span>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg-text">PRECOS</div>
+    <div class="hero-tag">Investimento</div>
+    <h1>Escolha<span>seu plano.</span></h1>
+    <p class="hero-sub">Cada projeto é único. Escolha o formato que melhor se encaixa na sua necessidade.</p>
+  </section>
+
+  <div class="divider"><span>Planos</span></div>
+
+  <!-- Pricing -->
+  <section class="pricing-section">
+    <div class="pricing-grid">
+
+      <!-- ARTE ÚNICA -->
+      <article class="plan-card reveal">
+        <span class="plan-index">01 / Plano</span>
+        <h2 class="plan-name">Arte<br>Única</h2>
+        <p class="plan-tagline">Projeto único e exclusivo,<br>desenvolvido do zero.</p>
+        <div class="plan-sep"></div>
+        <div class="plan-price-block">
+          <p class="plan-price-label">Investimento</p>
+          <p class="plan-price"><sup>R$</sup>600</p>
+        </div>
+        <ul class="plan-features">
+          <li>1 arte exclusiva criada do zero</li>
+          <li>Arquivo final em JPG com qualidade para impressão</li>
+          <li>1 revisão inclusa</li>
+          <li>Entrega em até 7 dias úteis</li>
+        </ul>
+        <a
+          href="https://wa.me/5516996069840?text=Ol%C3%A1!%20Tenho%20interesse%20no%20plano%20Arte%20%C3%9Anica%20(R%24600)."
+          target="_blank"
+          class="btn-whatsapp"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          <span>Solicitar agora</span>
+        </a>
+      </article>
+
+      <!-- ARTE DUPLA -->
+      <article class="plan-card featured reveal reveal-delay-1">
+        <div class="plan-badge">Mais escolhido</div>
+        <span class="plan-index">02 / Plano</span>
+        <h2 class="plan-name">Arte<br>Dupla</h2>
+        <p class="plan-tagline">Mesma base criativa,<br>duas variações distintas.</p>
+        <div class="plan-sep"></div>
+        <div class="plan-price-block">
+          <p class="plan-price-label">Investimento</p>
+          <p class="plan-price"><sup>R$</sup>1.000</p>
+        </div>
+        <ul class="plan-features">
+          <li>2 artes com a mesma base de criação</li>
+          <li>Variações de cor, composição ou tipografia</li>
+          <li>Arquivos finais em JPG com qualidade para impressão</li>
+          <li>1 revisão inclusa</li>
+          <li>Entrega em até 7 dias úteis</li>
+        </ul>
+        <a
+          href="https://wa.me/5516996069840?text=Ol%C3%A1!%20Tenho%20interesse%20no%20plano%20Arte%20Dupla%20(R%24%201.000)."
+          target="_blank"
+          class="btn-whatsapp"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          <span>Solicitar agora</span>
+        </a>
+      </article>
+
+      <!-- ARTE SÉRIE -->
+      <article class="plan-card reveal reveal-delay-2">
+        <span class="plan-index">03 / Plano</span>
+        <h2 class="plan-name">Arte<br>Série</h2>
+        <p class="plan-tagline">Uma ideia, quatro expressões.<br>Consistência visual total.</p>
+        <div class="plan-sep"></div>
+        <div class="plan-price-block">
+          <p class="plan-price-label">Investimento</p>
+          <p class="plan-price"><sup>R$</sup>1.200</p>
+        </div>
+        <ul class="plan-features">
+          <li>4 artes de uma mesma ideia com pequenas variações</li>
+          <li>Identidade visual coesa entre todas as peças</li>
+          <li>Arquivos finais em JPG com qualidade para impressão</li>
+          <li>1 revisão inclusa</li>
+          <li>Entrega em até 7 dias úteis</li>
+        </ul>
+        <a
+          href="https://wa.me/5516996069840?text=Ol%C3%A1!%20Tenho%20interesse%20no%20plano%20Arte%20S%C3%A9rie%20(R%24%201.200)."
+          target="_blank"
+          class="btn-whatsapp"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          <span>Solicitar agora</span>
+        </a>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- Payment info -->
+  <div class="payment-strip reveal">
+    <div class="payment-item">
+      <span class="payment-item-label">Entrada</span>
+      <span class="payment-item-value">50%</span>
+    </div>
+    <div class="payment-sep"></div>
+    <div class="payment-item">
+      <span class="payment-item-label">Na entrega</span>
+      <span class="payment-item-value">50%</span>
+    </div>
+    <div class="payment-sep"></div>
+    <div class="payment-item">
+      <span class="payment-item-label">Prazo</span>
+      <span class="payment-item-value">7 dias úteis</span>
+    </div>
+    <p class="payment-note">
+      O pagamento é feito em duas etapas: 50% no início do projeto para reservar sua data, e os 50% restantes na entrega final.
+    </p>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <span>Oppo Design &copy; 2025</span>
+    <a href="https://wa.me/5516996069840" target="_blank">+55 16 99606-9840</a>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('custom-cursor');
+    let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursor.classList.add('visible');
+    });
+    document.addEventListener('mouseleave', () => cursor.classList.remove('visible'));
+    document.addEventListener('mousedown', () => cursor.classList.add('clicking'));
+    document.addEventListener('mouseup', () => cursor.classList.remove('clicking'));
+    function animateCursor() {
+      cursorX += (mouseX - cursorX) * 0.12;
+      cursorY += (mouseY - cursorY) * 0.12;
+      cursor.style.left = cursorX + 'px';
+      cursor.style.top  = cursorY + 'px';
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    // Scroll reveal
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+  </script>
+</body>
+</html>
